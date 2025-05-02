@@ -1,22 +1,27 @@
 name: Push to GCR/GHCR GitHub Action
-on: 
-  push:
-    tags:        
-      - '*'           # Push events to every tag not containing / 
 
+on:
+  push:
+    tags:
+      - '*'  # Trigger on any tag push
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
 jobs:
   build-and-push-to-gcr-service-account:
     name: Build & push to GCR/GHCR
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}'
-      - name: Building and pushing the image
+
+      - name: Build and push Docker image
         run: |
           echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
           yes | gcloud auth configure-docker gcr.io
