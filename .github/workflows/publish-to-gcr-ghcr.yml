@@ -14,6 +14,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Check if secret exists
+        run: |
+          if [ -z "${{ secrets.GCLOUD_SERVICE_ACCOUNT_JSON }}" ]; then
+            echo "Secret is NOT available!"
+            exit 1
+          else
+            echo "Secret is available."
+          fi
 
       - name: Authenticate to Google Cloud
         id: auth
