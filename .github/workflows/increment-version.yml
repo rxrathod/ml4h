@@ -20,6 +20,7 @@ jobs:
 
       - name: Checkout main for version edit
         run: |
+          export GIT_LFS_SKIP_SMUDGE=1
           # Note: the following account information will not work on GHES
           git config --global user.name "github-actions[bot]"
           git config --global user.email {user.id}+{user.login}@users.noreply.github.com
